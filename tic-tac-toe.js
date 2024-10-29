@@ -5,6 +5,16 @@ Date Last Modified: October 27, 2024*/
 var state =Array(9).fill('');//Initialises the array to check for winners.
 var player = ['X','O'];//Player switch
 var current = player[0];//Current player value
+var combos = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+];
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -54,12 +64,8 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         w = document.querySelector('#status');
-        p = document.querySelectorAll('#status > p');
         w.classList.remove('you-won');//Removes style from the text.
-
-        p.forEach((para) => {
-            para.remove();//Removes every paragraph under status id
-        });
+        w.textContent = 'Move your mouse over a square and click to play an X or an O.';
 
         state =Array(9).fill('');
         current = player[0];
@@ -67,18 +73,28 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Checks for all possible conditions for winning a game.
     function Win_Check(){
-        if(((state[0] === state[1] && state[1] === state[2] && state[0] !== '') ||(state[0] === state[4] && state[4] === state[8] && state[0] !== '') ||(state[0] === state[3] && state[3] === state[6] && state[0] !== '')) ||((state[3] === state[4] && state[4] === state[5] && state[4] !== '') ||(state[2] === state[4] && state[4] === state[6] && state[4] !== '') ||
-        (state[1] === state[4] && state[4] === state[7] && state[4] !== '')) ||((state[6] === state[7] && state[7] === state[8] && state[6] !== '') ||(state[2] === state[5] && state[5] === state[8] && state[8] !== ''))){
-            w = document.querySelector('#status');
-            w.classList.add('you-won');
+        for(let i=0; i < combos.length; i++){
+            var check = combos[i];
+            var box1 = state[check[0]];
+            var box2 = state[check[1]];
+            var box3 = state[check[2]];
 
-            p = document.createElement('p');
+            if(box1==box2 && box2==box3 && box2 != ""){
+                w = document.querySelector('#status');
+                w.classList.add('you-won');
 
-            p.textContent = `Congratulations! ${current} has won!`
+                w.textContent = `Congratulations! ${current} has won!`;
 
-            w.appendChild(p);
-            state =Array(9).fill('');//Intialises the win check state after finding a winning combination.
+                //Intialises the win check state after finding a winning combination.
+                state =Array(9).fill('');
+                break;
+            }
+
+            else{
+                continue;
+            }
         }
+        
     }
 });
 
